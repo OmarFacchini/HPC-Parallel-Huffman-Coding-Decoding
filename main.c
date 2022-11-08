@@ -3,7 +3,7 @@
 #include <string.h>
 
 
-#include "minHeapUtil.h"
+#include "maxHeapUtil.h"
 #include "huffmanUtil.h"
 
 struct charAppearance{
@@ -18,7 +18,7 @@ int main(int argc, char const *argv[]){
     int freq[] = { 5, 9, 12, 13, 16, 45 };
  
     int size = sizeof(arr) / sizeof(arr[0]);
- 
+    //printf("size: %d\nsizeof(arr): %d\nsizeof(arr[0]): %d\n", size, sizeof(arr), sizeof(arr[0]));
     huffmanAlgorithm(arr, freq, size);
  
     return 0;
