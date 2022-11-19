@@ -49,12 +49,14 @@ int main(int argc, char const *argv[]){
         freq = filePreprocessing(myFile, freq, &totalRowsInFile);
         //printf("frequency of a: %d\n",freq[0]);
 
+        //store the frequency of the words in the encoded file.
+        storeFrequencyOnFile(freq, arr, size);
+
         //printf("size: %d\nsizeof(arr): %d\nsizeof(arr[0]): %d\n", size, sizeof(arr), sizeof(arr[0]));
         huffmanAlgorithmEncode(myFile, arr, freq, size);
     }
 
     if(strcmp(argv[2],"decode") == 0){
-        storeFrequencyOnFile(myFile,freq,arr);
     }
 
     free(freq);

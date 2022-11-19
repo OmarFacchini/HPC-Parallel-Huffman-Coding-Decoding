@@ -11,6 +11,6 @@ int *filePreprocessing(const char *fileName, int *frequency, int *rowsInFile);
 /*after the processing write the frequency and the chars in the file to be able to decode it later.
   takes as input the file name, the array with the frequency of each character and the array of characters.
 */
-void storeFrequencyOnFile(const char *fileName, int *frequency, char *characters);
+void storeFrequencyOnFile(int *frequency, char *characters, int size);
 
 #endif

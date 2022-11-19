@@ -143,7 +143,7 @@ void huffmanAlgorithmEncode(const char *inputFileName, char data[], int frequenc
 
   //open input and output files.
   FILE *myOutput, *myInput;
-  myOutput = fopen("encodedText.txt","w");
+  myOutput = fopen("encodedText.txt","a");
   myInput = fopen(inputFileName,"r");
 
   //check if the files were opened correctly
