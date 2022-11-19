@@ -2,6 +2,7 @@
 #include "maxHeapUtil.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #define MAX_TREE_HEIGHT 25 //number of letters in the english alphabet, this is temp.
 
@@ -81,15 +82,81 @@ void printEncoding(struct maxHeapNode *node, int code[], int top, FILE *myFile){
     }
 }
 
+
+/*encodes a character by traversing the tree recursively until the char is found.
+  takes as input the node in which the function currently is, the code of the char that has to be updated based on the movement on the tree
+  the output file to write the encoded chars on and the size of the encoding that gets updated every time the code is updated.
+*/
+void encodeChar(struct maxHeapNode *node, int code[], FILE *myOutput, char readCharacter, int size){
+  //check if the node contains the character we want to encode
+  if(node->character == readCharacter){
+    //if yes write on file the encoded char.
+    for(int i = 0; i < size; i++){
+      fprintf(myOutput, "%d", code[i]);
+    }
+    //since the function has done what it had to, return without traversing the entire tree.
+    return;
+  }else{
+    //if the node doesn't containt the character we are wanting to encode, check move on the NON NULL children.
+    if(node->leftChild != NULL){
+      //going left means adding a 0 to the encoding and recursively call the function.
+      code[size] = 0;
+      encodeChar(node->leftChild, code, myOutput, readCharacter, size + 1);
+    }
+    if(node->rightChild != NULL){
+      //going right means adding a 1 to the encoding and recursively call the function.
+      code[size] = 1;
+      encodeChar(node->rightChild, code, myOutput, readCharacter, size + 1);
+    }
+  }
+}
+
+
+/*reads character from file and encodes it.
+  takes as input the node in which the function currently is, the code of the char that has to be updated based on the movement on the tree
+  the output file to write the encoded chars on and the size of the encoding that gets updated every time the code is updated.
+*/
+void readAndEncodeFile(struct maxHeapNode *node, int code[], int size, FILE *myInput, FILE *myOutput){
+  //char to store the read char from the file
+  char readCharacter = fgetc(myInput);
+
+  //loop until end of file
+  while(!feof(myInput)){
+    encodeChar(node, code, myOutput, readCharacter, size);
+
+    //read new char
+    readCharacter = fgetc(myInput);
+  }
+
+}
+
+
 /*actual call to start the algorithm to build the huffman tree and to prints the encoding obtained.
   takes as input the array of characters, an array for their frequency and the size of the array.
 */
-void huffmanAlgorithm(char data[], int frequency[], int size){
-    struct maxHeapNode *root = buildHuffmanTree(data, frequency, size);
+void huffmanAlgorithmEncode(const char *inputFileName, char data[], int frequency[], int size){
+  //create the tree
+  struct maxHeapNode *root = buildHuffmanTree(data, frequency, size);
 
-    int codes[MAX_TREE_HEIGHT], top = 0;
-    FILE *myFile;
-    myFile = fopen("encoding.txt","w");
-    printEncoding(root, codes, top, myFile);
-    fclose(myFile);
+  int codes[MAX_TREE_HEIGHT], top = 0;
+
+
+  //open input and output files.
+  FILE *myOutput, *myInput;
+  myOutput = fopen("encodedText.txt","w");
+  myInput = fopen(inputFileName,"r");
+
+  //check if the files were opened correctly
+  if(NULL == myOutput || NULL == myInput){
+    printf("file can't be opened or doesn't exist.\n");
+    exit(-1);
+  }
+
+  readAndEncodeFile(root, codes, 0, myInput, myOutput);
+
+  //printEncoding(root, codes, top, myOutput);
+
+  //close the files.
+  fclose(myInput);
+  fclose(myOutput);
 }

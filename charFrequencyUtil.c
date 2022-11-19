@@ -74,3 +74,37 @@ int *filePreprocessing(const char *fileName, int *frequency, int *rowsInFile){
   //return the frequency array.
   return frequency;
 }
+
+
+/*after the processing write the frequency and the chars in the file to be able to decode it later.
+  takes as input the file name, the array with the frequency of each character and the array of characters.
+*/
+void storeFrequencyOnFile(const char *fileName, int *frequency, char *characters){
+
+  //declare file to read data from.
+  FILE *myFile;
+
+  //open the file in read mode, file name is given as input in the cli.
+  myFile = fopen(fileName,"w");
+  
+  //myFile = fopen(strcat(fileName,".txt"),"w"); this row only wants the name without extension.
+
+  //check if the file was opened correctly
+  if(NULL == myFile){
+      printf("file can't be opened or doesn't exist.\n");
+      exit(-1);
+  }
+
+  //get the number of items in the array
+  int size = sizeof(characters)/sizeof(characters[0]);
+
+  for(int i = 0; i < size; i++){
+    //write char frequency. ex: a 10
+    fprintf(myFile, "%c %d ", characters[i], frequency[i]);
+  }
+  //new line in file to separate frequency and encoding.
+  fprintf(myFile,"\n");
+
+  //close file.
+  fclose(myFile);
+}
