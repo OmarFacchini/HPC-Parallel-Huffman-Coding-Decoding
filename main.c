@@ -29,6 +29,9 @@ int main(int argc, char const *argv[]){
 
     //allocate array for frequency of each char.
     int *freq = (int*)malloc(sizeof(arr) * sizeof(int)); 
+
+    //count rows in the file.
+    int totalRowsInFile = 0;
     
     //check if the allocation of the array was successful, else end the program.
     if(freq == NULL){
@@ -42,21 +45,42 @@ int main(int argc, char const *argv[]){
                 freq[i] = 0;
         }
 
-        //count rows in the file.
-        int totalRowsInFile = 0;
-
         //process the file to get frequency of chars and number of rows in the file.
         freq = filePreprocessing(myFile, freq, &totalRowsInFile);
-        //printf("frequency of a: %d\n",freq[0]);
 
         //store the frequency of the words in the encoded file.
         storeFrequencyOnFile(freq, arr, size);
 
         //printf("size: %d\nsizeof(arr): %d\nsizeof(arr[0]): %d\n", size, sizeof(arr), sizeof(arr[0]));
         huffmanAlgorithmEncode(myFile, arr, freq, size);
+
     }
 
     if(strcmp(argv[2],"decode") == 0){
+
+        //declare file to read data from.
+        FILE *myInput;
+
+        //open the file in read mode, file name is given as input in the cli.
+        myInput = fopen(myFile,"r");
+
+        //check if file exists.
+        if(NULL == myInput){
+            printf("file can't be opened or doesn't exist.\n");
+            exit(-1);
+        }
+
+        freq = getFrequencyFromFile(myInput, freq);
+
+        /*for(int i = 0; i < 26; i++){
+                printf("%d\n",freq[i]);
+        }*/
+
+        huffmanAlgorithmDecode(myInput, arr, freq, size);
+
+        //close file stream.
+        fclose(myInput);
+
     }
 
     free(freq);

@@ -29,4 +29,7 @@ void huffmanAlgorithmEncode(const char *inputFileName, char data[], int frequenc
 */
 void writeEncodingToFile(int array[], int size, char character, FILE *myFile);
 
+
+void huffmanAlgorithmDecode(FILE *inputFile, char data[], int frequency[], int size);
+
 #endif

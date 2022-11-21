@@ -122,10 +122,64 @@ void readAndEncodeFile(struct maxHeapNode *node, int code[], int size, FILE *myI
 
   //loop until end of file
   while(!feof(myInput)){
-    encodeChar(node, code, myOutput, readCharacter, size);
+    //if there is a space or an endline, just print it.
+    if(readCharacter == '\n' || readCharacter == ' '){
+      fprintf(myOutput,"%c", readCharacter);
+    }else{
+      encodeChar(node, code, myOutput, readCharacter, size);
+    }
 
     //read new char
     readCharacter = fgetc(myInput);
+  }
+
+}
+
+
+/*reads the encoded file and write the decoded characters into the otput file.
+  takes as input the root of the tree, the input file and the output file.
+*/
+void readAndDecodeFile(struct maxHeapNode *root, FILE *myInput, FILE *myOutput){
+  //node used to traverse the tree
+  struct maxHeapNode *node = root;
+
+  //read the first two characters as the first now by previous statment ends in " \n".
+  char readCharacter = fgetc(myInput);
+  readCharacter = fgetc(myInput);
+
+  //read the file until the end.
+  while((readCharacter = fgetc(myInput)) != EOF){
+    printf("char: %c\n",readCharacter);
+
+    //check if the node is a leaf, meaning we reached a char. 
+    if(isLeaf(node)){
+      printf("leaf: %c\n\n", node->character);
+
+      //write on file the decoded character.
+      fprintf(myOutput, "%c",node->character);
+
+      //update the node to be back to the root of the tree as we need to encode a new char.
+      node = root;
+    }
+
+    //check if the char is 0 meaning the path leads to the left
+    if(readCharacter == '0'){
+      //move left
+      node = node->leftChild;
+    }
+
+    //check if the char is 1 meaning the path leads to the right
+    if(readCharacter == '1'){
+      //move right
+      node = node->rightChild;
+    }
+
+    //check if a non code characters is being read, in this case nothing has to be done but print and update the node to the root.
+    if(readCharacter == '\n' || readCharacter == ' '){
+      fprintf(myOutput, "%c", readCharacter);
+      //the update is for safety, not really needed.
+      node = root;
+    }
   }
 
 }
@@ -139,7 +193,6 @@ void huffmanAlgorithmEncode(const char *inputFileName, char data[], int frequenc
   struct maxHeapNode *root = buildHuffmanTree(data, frequency, size);
 
   int codes[MAX_TREE_HEIGHT], top = 0;
-
 
   //open input and output files.
   FILE *myOutput, *myInput;
@@ -158,5 +211,28 @@ void huffmanAlgorithmEncode(const char *inputFileName, char data[], int frequenc
 
   //close the files.
   fclose(myInput);
+  fclose(myOutput);
+}
+
+void huffmanAlgorithmDecode(FILE *inputFile, char data[], int frequency[], int size){
+
+  struct maxHeapNode *root = buildHuffmanTree(data, frequency, size);
+
+  //int codes[MAX_TREE_HEIGHT], top = 0;
+
+  //open input and output files.
+  FILE *myOutput;
+  myOutput = fopen("decodedText.txt","w");
+
+  //check if the files were opened correctly
+  if(NULL == myOutput){
+    printf("file can't be opened or doesn't exist.\n");
+    exit(-1);
+  }
+
+  readAndDecodeFile(root, inputFile, myOutput);
+  //printEncoding(root,codes,top,myOutput);
+
+  //close the files.
   fclose(myOutput);
 }

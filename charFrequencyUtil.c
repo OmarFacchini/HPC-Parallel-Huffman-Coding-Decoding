@@ -106,3 +106,49 @@ void storeFrequencyOnFile(int *frequency, char *characters, int size){
   //close file.
   fclose(myFile);
 }
+
+
+/*reads the frequency of each character from the file and stores it in orded to build the tree to decode.
+  takes as input the file name and an empty frequency array.
+  returns the array of frequencies for each letter.
+*/
+int *getFrequencyFromFile(FILE *myFile, int *frequency){
+
+  //read char and value.
+  char readCharacter = fgetc(myFile);
+  int freq;
+  fscanf(myFile, "%d", &freq);
+
+  //printf("index: %d\nfreq: %d\n\n", 0, freq);
+  //printf("index: 0\nchar: %c\nvalue: %d\n\n",readCharacter, freq);
+
+  //index of where in the frequency array i am.
+  int index = 0;
+
+  //loop until end of first row, 25 is because there are 26 letters in english alphabet (where alle char-frequency are stored)
+  //and i want to stop at 25 to not overflow and read an actual encoded line
+  while(index < 25){
+
+    //just a guard, character read should always be a char.
+    if(!(readCharacter == ' ')){
+      //update frequency of the variable.
+      frequency[index] = freq;
+      index++;
+    }
+
+    //read new char and value.
+    readCharacter = fgetc(myFile);
+    fscanf(myFile,"%d", &freq);
+    //printf("index: %d\nfreq: %d\n\n", index, freq);
+    //printf("index: %d\nchar: %c\nvalue: %d\n\n",index, readCharacter, freq);
+  }
+
+  readCharacter = fgetc(myFile);
+  fscanf(myFile,"%d", &freq);
+  frequency[index] = freq;
+  //printf("index: %d\nchar: %c\nvalue: %d\n\n",index, readCharacter, freq);
+
+
+  //return modified frequency.
+  return frequency;
+}

@@ -13,4 +13,11 @@ int *filePreprocessing(const char *fileName, int *frequency, int *rowsInFile);
 */
 void storeFrequencyOnFile(int *frequency, char *characters, int size);
 
+
+/*reads the frequency of each character from the file and stores it in orded to build the tree to decode.
+  takes as input the file name and an empty frequency array.
+  returns the array of frequencies for each letter.
+*/
+int *getFrequencyFromFile(FILE *myFile, int *frequency);
+
 #endif
