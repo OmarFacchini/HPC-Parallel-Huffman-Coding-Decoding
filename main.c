@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 
 #include "maxHeapUtil.h"
@@ -17,9 +18,6 @@ int main(int argc, char const *argv[]){
 
     //get the name of the file.
     const char *myFile = argv[1];
-
-    //char arr[] = { 'a', 'b', 'c', 'd', 'e', 'f' };
-    //int freq[] = { 5, 9, 12, 13, 16, 45 };
 
     //array of chars in the english alphabet.
     char arr[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
@@ -45,15 +43,46 @@ int main(int argc, char const *argv[]){
                 freq[i] = 0;
         }
 
-        //process the file to get frequency of chars and number of rows in the file.
-        freq = filePreprocessing(myFile, freq, &totalRowsInFile);
+        FILE *myCSV;
+        //remember to change the name of the csv file based on the input file.
+        myCSV = fopen(".\\results\\serialResults\\10000000wordsDense.csv", "w");
+        fprintf(myCSV, "fileProcessingTime, encodingTime, totalTime\n");
 
-        //store the frequency of the words in the encoded file.
-        storeFrequencyOnFile(freq, arr, size);
+        clock_t start, end;
+        double fileProcessingTime, totalTime, encodingTime;
 
-        //printf("size: %d\nsizeof(arr): %d\nsizeof(arr[0]): %d\n", size, sizeof(arr), sizeof(arr[0]));
-        huffmanAlgorithmEncode(myFile, arr, freq, size);
+        //run 100 times just to have an accurate average.
+        for(int i = 0; i < 100; i++){
 
+            start = clock();
+
+            //process the file to get frequency of chars and number of rows in the file.
+            freq = filePreprocessing(myFile, freq, &totalRowsInFile);
+
+            //store the frequency of the words in the encoded file.
+            storeFrequencyOnFile(freq, arr, size);
+
+            end = clock();
+            fileProcessingTime = (double)((end - start)) / CLOCKS_PER_SEC;
+            //printf("time taken for file processing: %.3f\n", fileProcessingTime);
+
+
+
+            //printf("size: %d\nsizeof(arr): %d\nsizeof(arr[0]): %d\n", size, sizeof(arr), sizeof(arr[0]));
+            huffmanAlgorithmEncode(myFile, arr, freq, size);
+
+            end = clock();
+            totalTime = (double)((end - start)) / CLOCKS_PER_SEC;
+            //printf("Total time taken: %.3f\n", totalTime);
+
+            encodingTime = totalTime - fileProcessingTime;
+            //printf("time taken for encoding: %.3f\n\n", encodingTime);
+
+            fprintf(myCSV, "%.3f, %.3f, %.3f\n", fileProcessingTime,encodingTime,totalTime);
+
+        }
+
+        fclose(myCSV);
     }
 
     if(strcmp(argv[2],"decode") == 0){
