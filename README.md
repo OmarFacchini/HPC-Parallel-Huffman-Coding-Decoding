@@ -136,19 +136,19 @@ As there are many different possible choices that can be done in the implementat
 
 ## **3.3 Benchmarks on the cluster**
 
-![image](.\results\graphs\ramp-up-comparison-of-serial-and-basic-parallel-dense.png)
+![image](https://github.com/OmarFacchini/HPC-Parallel-Huffman-Coding-Decoding/blob/main/results/graphs/ramp-up-comparison-of-serial-and-basic-parallel-dense.png)
 
 <b>fig. 1 - Comparison between serial and parallel ramp-up</b>
 
 ---
 
-![image](.\results\graphs\ramp-up-comparison-of-dense-data-1-chunk-with-2-chunks-same-cores.png)
+![image](https://github.com/OmarFacchini/HPC-Parallel-Huffman-Coding-Decoding/blob/main/results/graphs/ramp-up-comparison-of-dense-data-1-chunk-with-2-chunks-same-cores.png)
 
 <b>fig. 2 - Comparison between different placing ramp-up</b>
 
 ---
 
-![image](.\results\graphs\ramp-up-comparison-of-1-chunk-with-different-cores.png)
+![image](https://github.com/OmarFacchini/HPC-Parallel-Huffman-Coding-Decoding/blob/main/results/graphs/ramp-up-comparison-of-1-chunk-with-different-cores.png)
 
 <b>fig. 3 - Comparison between different cores ramp-up</b>
 
